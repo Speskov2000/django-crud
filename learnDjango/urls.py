@@ -15,18 +15,23 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, re_path
+from django.views.generic import TemplateView
 from firstapp import views
 
 urlpatterns = [
     path('products/', views.products),
     path('products/<int:productid>/', views.products),
 
+    path('',views.index),
     path('test',views.test),
 
     re_path('^users/(?P<id>\d+)/(?P<name>\w+)/(?P<age>\d+)', views.users),
     re_path('^users/(?P<id>\d+)/(?P<name>\w+)', views.users),
     re_path('^users/(?P<id>\d+)', views.users),
     re_path('^users/', views.users),
+
+    path('about/', TemplateView.as_view(template_name="templateView/about.html")),
+    path('contact/', TemplateView.as_view(template_name="templateView/contact.html")),
 
     path('admin/', admin.site.urls),
 ]
