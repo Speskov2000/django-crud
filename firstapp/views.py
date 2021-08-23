@@ -1,24 +1,54 @@
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponsePermanentRedirect
 from django.shortcuts import render
+from .forms import UserForm
+from .models import Person
 
 
+# получение данных из бд
 def index(request):
-    header = "Personal Data"  # обычная переменная
-    langs = ["English", "German", "Spanish"]  # массив
-    user = {"name": "Tom", "age": 23}  # словарь
-    addr = ("Абрикосовая", 23, 45)  # кортеж
+    people = Person.objects.all()
+    userform = UserForm()
+    return render(request, "firstapp/index.html", {
+        "form": userform,
+        "people": people
+    })
 
-    data = {"header": header, "langs": langs, "user": user, "address": addr}
-    return render(request, "firstapp/index.html", context=data)
+
+# сохранение данных в бд
+def create(request):
+    if request.method == "POST":
+        tom = Person()
+        tom.name = request.POST.get("name")
+        tom.age = request.POST.get("age")
+        tom.save()
+    return HttpResponseRedirect("/")
 
 
-def user(request, id=1, name="bob", age=18):
-    data = {"id": id, "name": name, "age": age}
-    return render(request, "firstapp/user.html", context=data)
+def update(request, id):
+    if request.method == "POST":
+        tom = Person.objects.get(id=id)
+        tom.name = request.POST.get("name")
+        tom.age = request.POST.get("age")
+        tom.save(update_fields=["name", "age"])
+        return HttpResponseRedirect("/")
+    else:
+        userform = UserForm()
+        user = Person.objects.get(id=id)
+        return render(request, "firstapp/update.html", {"form": userform, "user": user})
+
+
+def delete(request, id):
+    if request.method == "POST":
+        person = Person.objects.get(id=id)
+        person.delete()
+    return HttpResponseRedirect("/")
 
 
 def contact(request):
-    return HttpResponseRedirect("/products")
+    # return HttpResponseRedirect("/products")
+    users = Person.objects.all()
+
+    users
 
 
 def details(request):

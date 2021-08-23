@@ -19,15 +19,8 @@ from django.views.generic import TemplateView
 from firstapp import views
 
 urlpatterns = [
-    path('',views.index),    
-
-    re_path('^user/(?P<id>\d+)/(?P<name>\w+)/(?P<age>\d+)', views.user),
-    re_path('^user/(?P<id>\d+)/(?P<name>\w+)', views.user),
-    re_path('^user/(?P<id>\d+)', views.user),
-    re_path('^user/', views.user),
-
-    path('about/', TemplateView.as_view(template_name="templateView/about.html")),
-    path('contact/', TemplateView.as_view(template_name="templateView/contact.html")),
-
-    path('admin/', admin.site.urls),
+    path('', views.index),
+    path('create/', views.create),
+    path('update/<int:id>/', views.update),
+    path('delete/<int:id>/', views.delete),
 ]

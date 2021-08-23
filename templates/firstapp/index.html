@@ -1,12 +1,32 @@
 {% extends "layouts/base.html" %}
-{% block title %}About{% endblock title %}
- 
+{% block title %}Главная{% endblock title %}
+
 {% block content %}
-    <ul>
-        {% for lan in langs %}
-        <li>{{ lan }}</li>
-        {% empty %}
-        <li>Langs array is empty</li>
+<form method="POST" action="create/">
+    {% csrf_token %}
+    <table>
+        {{ form }}
+    </table>
+    <input type="submit" value="Send" >
+</form>
+
+{% if people.count > 0 %}
+    <h2>Список пользователей:</h2>
+    <table class="table">
+        <tr><th>Id</th><th>Имя</th><th>Возраст</th><th>Действия</th></tr>
+        {% for person in people %}
+        <tr>
+            <td>{{ person.id }}</td>
+            <td>{{ person.name }}</td>
+            <td>{{ person.age }}</td>
+            <td>
+                <a href="update/{{ person.id }}">Изменить</a>
+                <br>
+                <a href="delete/{{ person.id }}">Удалить</a>
+            </td>
+        </tr>
         {% endfor %}
-    </ul>
+    </table>
+
+{% endif %}
 {% endblock content %}
