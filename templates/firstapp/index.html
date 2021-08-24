@@ -2,16 +2,11 @@
 {% block title %}Главная{% endblock title %}
 
 {% block content %}
-<form method="POST" action="create/">
-    {% csrf_token %}
-    <table>
-        {{ form }}
-    </table>
-    <input type="submit" value="Send" >
-</form>
 
+<a href="/create">Создать нового пользователя</a>
+
+<h2>Список пользователей:</h2>
 {% if people.count > 0 %}
-    <h2>Список пользователей:</h2>
     <table class="table">
         <tr><th>Id</th><th>Имя</th><th>Возраст</th><th>Действия</th></tr>
         {% for person in people %}
