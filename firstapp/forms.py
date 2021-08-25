@@ -15,3 +15,23 @@ class UserForm(forms.Form):
             "min_value": "Возраст не должен быть отрицательным",
             "max_value": "возраст не должен превышать 200 лет",
             })
+
+
+class ProductForm(forms.Form):
+    name = forms.CharField(
+        label="Наименование товара",
+        max_length=30,
+        error_messages={"max_length": "Наименование товара не должно превышать 30 символов"})
+
+    description = forms.CharField(
+        label="Описание товара",
+        max_length=300,
+        widget=forms.Textarea,
+        error_messages={"max_length": "Описание товара не должно превышать 30 символов"})
+
+    price = forms.IntegerField(
+        label="Цена",
+        min_value=0,
+        error_messages={
+            "min_value": "Цена не может быть отрицательной",
+            })

@@ -1,0 +1,14 @@
+{% extends "layouts/base.html" %}
+{% block title %}Создать пользователя{% endblock title %}
+
+{% block content %}
+<h2>Выложить новый товар</h2>
+<form method="POST">
+    {% csrf_token %}
+    <table>
+        {{ form }}
+    </table>
+    <input type="submit" value="Send" >
+</form>
+
+{% endblock content %}

@@ -20,7 +20,15 @@ from firstapp import views
 
 urlpatterns = [
     path('', views.index),
-    path('create/', views.create),
-    path('update/<int:id>/', views.update),
-    path('delete/<int:id>/', views.delete),
+
+    path('createUser/', views.createUser),
+    path('updateUser/<int:id>/', views.updateUser),
+    path('deleteUser/<int:id>/', views.deleteUser),
+
+    path('productsOfUser/<int:userId>', views.productsOfUser),
+    path('createProduct/', views.createProduct),
+    path('updateProduct/<int:id>/', views.updateProduct),
+    path('deleteProduct/<int:id>/', views.deleteProduct),
+
+    path('admin/', admin.site.urls),
 ]

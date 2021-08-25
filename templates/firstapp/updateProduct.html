@@ -1,9 +1,10 @@
 {% extends "layouts/base.html" %}
-{% block title %}Создать пользователя{% endblock title %}
+{% block title %}Изменить{% endblock title %}
 
 {% block content %}
-Создать пользователя
-<form method="POST" novalidate>
+
+<h2>Изменить:</h2>
+<form method="POST">
     {% csrf_token %}
     <table>
         {{ form }}

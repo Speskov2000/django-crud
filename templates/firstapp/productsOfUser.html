@@ -1,0 +1,25 @@
+{% extends "layouts/base.html" %}
+{% block title %}Главная{% endblock title %}
+
+{% block content %}
+
+<h2>Список товаров пользователя "{{person.name}}":</h2>
+{% if products.count > 0 %}
+<hr />
+    <div class="row">
+        {% for product in products %}
+        <div class="col-4 product">
+
+
+            <h1>{{ product.name }}</h1>
+            <p>{{ product.description }}</p>
+            <p>Цена: {{ product.price }} Тг.</p>
+
+
+            <p><a href="updateProduct/{{ product.id }}">Изменить</a> | <a href="deleteProduct/{{ product.id }}">Удалить</a></p>
+        </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+{% endblock content %}

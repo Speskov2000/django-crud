@@ -9,3 +9,8 @@ h1 {
 img {
     width: 350px;
 }
+
+.product{
+    border-right: 1px solid;
+    border-bottom: 1px solid;
+}

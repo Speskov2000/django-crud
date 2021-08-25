@@ -3,25 +3,45 @@
 
 {% block content %}
 
-<a href="/create">Создать нового пользователя</a>
+<a href="/createUser">Создать нового пользователя</a> | <a href="/createProduct">Выставить товар на продажу</a>
+<hr>
+<h2>Список Товаров:</h2>
+{% if products.count > 0 %}
+<hr />
+    <div class="row">
+        {% for product in products %}
+        <div class="col-4 product">
+            <p>Опубликовал(а): {{ product.person.name }}</p>
 
+            <h1>{{ product.name }}</h1>
+            <p>{{ product.description }}</p>
+            <p>Цена: {{ product.price }} Тг.</p>
+
+
+            <p><a href="updateProduct/{{ product.id }}">Изменить</a> | <a href="deleteProduct/{{ product.id }}">Удалить</a></p>
+        </div>
+        {% endfor %}
+    </div>
+{% endif %}
+<hr />
 <h2>Список пользователей:</h2>
 {% if people.count > 0 %}
     <table class="table">
-        <tr><th>Id</th><th>Имя</th><th>Возраст</th><th>Действия</th></tr>
+        <tr><th>Id</th><th>Имя</th><th>Возраст</th><th>Операции над пользователями</th><th>Доска обьявлений пользователя</th></tr>
         {% for person in people %}
         <tr>
             <td>{{ person.id }}</td>
             <td>{{ person.name }}</td>
             <td>{{ person.age }}</td>
             <td>
-                <a href="update/{{ person.id }}">Изменить</a>
+                <a href="updateUser/{{ person.id }}">Изменить</a>
                 <br>
-                <a href="delete/{{ person.id }}">Удалить</a>
+                <a href="deleteUser/{{ person.id }}">Удалить</a>
             </td>
+            <td><a href="productsOfUser/{{ person.id }}">Обьявления</a></td>
         </tr>
         {% endfor %}
     </table>
-
 {% endif %}
+
 {% endblock content %}
