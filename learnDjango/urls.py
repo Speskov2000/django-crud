@@ -14,18 +14,19 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, re_path
+from django.urls import path, include
 from django.views.generic import TemplateView
 from firstapp import views
 
+
 urlpatterns = [
     path('', views.index),
-
-    path('createUser/', views.createUser),
-    path('updateUser/<int:id>/', views.updateUser),
-    path('deleteUser/<int:id>/', views.deleteUser),
-
     path('productsOfUser/<int:userId>', views.productsOfUser),
+
+    path('user/', include('authentication.urls', namespace='authentication')),
+
+
+
     path('createProduct/', views.createProduct),
     path('updateProduct/<int:id>/', views.updateProduct),
     path('deleteProduct/<int:id>/', views.deleteProduct),

@@ -2,12 +2,16 @@
 install:
 	pip install -r requirements.txt
 
+# Update requirements
+upr:
+	pip freeze > requirements.txt
+
 # Запустить server
 run:
 	python ./manage.py runserver 127.0.0.1:8000
 
 # Выполнить миграцию
-migrate:
+mi:
 	python ./manage.py makemigrations
 	python ./manage.py migrate
 
