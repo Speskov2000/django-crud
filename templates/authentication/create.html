@@ -6,7 +6,8 @@
 <form method="POST">
     {% csrf_token %}
     <table>
-        {{ form }}
+        <input type="text" name="username">
+        <input type="password" name="password">
     </table>
     <input type="submit" value="Send" >
 </form>

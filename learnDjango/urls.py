@@ -20,16 +20,12 @@ from firstapp import views
 
 
 urlpatterns = [
-    path('', views.index),
-    path('productsOfUser/<int:userId>', views.productsOfUser),
+    # path('', views.index),
+    # path('productsOfUser/<int:userId>', views.productsOfUser),
 
-    path('user/', include('authentication.urls', namespace='authentication')),
+     path('user/', include('authentication.urls', namespace='authentication')),
+    # path('product/', include('firstapp.urls', namespace='firstapp')),
 
-
-
-    path('createProduct/', views.createProduct),
-    path('updateProduct/<int:id>/', views.updateProduct),
-    path('deleteProduct/<int:id>/', views.deleteProduct),
 
     path('admin/', admin.site.urls),
 ]
