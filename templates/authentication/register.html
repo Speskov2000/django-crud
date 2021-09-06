@@ -2,12 +2,12 @@
 {% block title %}Создать пользователя{% endblock title %}
 
 {% block content %}
-Создать пользователя
+
+<p>Создать пользователя:</p>
 <form method="POST">
     {% csrf_token %}
     <table>
-        <input type="text" name="username">
-        <input type="password" name="password">
+        {{ form }}
     </table>
     <input type="submit" value="Send" >
 </form>

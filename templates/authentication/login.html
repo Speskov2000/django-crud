@@ -1,0 +1,14 @@
+{% extends "layouts/base.html" %}
+{% block title %}Вход в аккаунт{% endblock title %}
+
+{% block content %}
+<p>Вход в аккаунт:</p>
+<form method="POST">
+    {% csrf_token %}
+    <table>
+        {{ form }}
+    </table>
+    <input type="submit" value="Send" >
+</form>
+
+{% endblock content %}
