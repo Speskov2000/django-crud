@@ -20,11 +20,11 @@ from firstapp import views
 
 
 urlpatterns = [
-    # path('', views.index),
-    # path('productsOfUser/<int:userId>', views.productsOfUser),
+    path('', TemplateView.as_view(template_name="layouts/base.html")),
 
-     path('user/', include('authentication.urls', namespace='authentication')),
-    # path('product/', include('firstapp.urls', namespace='firstapp')),
+
+    path('user/', include('authentication.urls', namespace='authentication')),
+    path('product/', include('firstapp.urls', namespace='firstapp')),
 
 
     path('admin/', admin.site.urls),

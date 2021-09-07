@@ -1,15 +1,15 @@
-# from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect, HttpResponsePermanentRedirect
-# from django.shortcuts import render
-# from .forms import ProductForm
-# from .models import Product
+from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect, HttpResponsePermanentRedirect
+from django.shortcuts import render
+from .forms import ProductForm
+from .models import Product
+from django.contrib.auth.models import User
 
 
-
-# # получение данных из бд
-# def index(request):
-#     people = Person.objects.all()
-#     products = Product.objects.all()
-#     return render(request, "firstapp/index.html", {"people": people, "products": products})\
+# получение данных из бд
+def index(request):
+    people = User.objects.all()
+    products = Product.objects.all()
+    return render(request, "firstapp/index.html", {"people": people, "products": products})\
 
 # def productsOfUser(request, userId):
 #     person = Person.objects.get(id = userId)
@@ -17,24 +17,22 @@
 #     # products = Person.objects.get(id = userId).product_set.all()
 #     return render(request, "firstapp/productsOfUser.html", {"products": products, "person": person})
 
-# # Вывешивание товара на продажу
-# def createProduct(request):
-#     if request.method == "POST":
-#         productForm = ProductForm(request.POST)
-#         if productForm.is_valid():
-#             person = Person.objects.get(id=7) # От имени какого пользователя публиковать товар
-
-#             product = Product()
-#             product.person = person
-#             product.name = productForm.cleaned_data["name"]
-#             product.description = productForm.cleaned_data["description"]
-#             product.price = productForm.cleaned_data["price"]
-#             product.save()
-#             return HttpResponseRedirect("/")
-#         else:
-#             return render(request, "firstapp/createProduct.html", {"form": productForm})
-#     else:
-#         return render(request, "firstapp/createProduct.html", {"form": ProductForm()})
+# Вывешивание товара на продажу
+def create(request):
+    if request.method == "POST":
+        productForm = ProductForm(request.POST)
+        if productForm.is_valid():
+            product = Product()
+            product.user = request.user
+            product.name = productForm.cleaned_data["name"]
+            product.description = productForm.cleaned_data["description"]
+            product.price = productForm.cleaned_data["price"]
+            product.save()
+            return HttpResponseRedirect("/product/")
+        else:
+            return render(request, "firstapp/create.html", {"form": productForm})
+    else:
+        return render(request, "firstapp/create.html", {"form": ProductForm()})
 
 # def updateProduct(request, id):
 #     try:

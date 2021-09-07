@@ -10,17 +10,24 @@
 <body>
 	<div class="container-fluid">
 		<div class="navbar bg-dark navbar-dark" style="margin-bottom:20px;">
-			<a class="navbar-brand" href="/"><h2>Django-project</h2></a>
+			<div>
+                <a class="navbar-brand" href="/"><h2>Django-project</h2></a>
+                <a class="btn btn-info" href="/product/"><h2>Товары</h2></a>
+            </div>
             <div>
-                <h6>
-                    <a class="navbar-brand" href="/user/register">Sign up</a></br>
-                    <a class="navbar-brand" href="/user/login">Sign in</a>
-                </h6>
+                {% if user.is_authenticated %}
+                    <form action="/user/logout/" method="POST">{% csrf_token %} <button type="submit" class="btn btn-light">{{ user.username }} - Выйти</button><form>
+                {% else %}
+                    <a class="btn btn-light" href="/user/login/">Войти</a>
+                    <a class="btn btn-light" href="/user/register/">Регистрация</a>
+                {% endif %}
             </div>
 		</div>
 		<div class="row">
             <div class="col-12">
-                {% block content%}{% endblock content %}
+                {% block content%}
+                    <h1 style="text-align: center">Это сайт, для реализации методологии CRUD, </br> а так-же настройки jwt-аутентификации между двумя проектами</h1>
+                {% endblock content %}
             </div>
         </div>
         <hr>
