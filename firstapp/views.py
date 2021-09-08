@@ -5,12 +5,13 @@ from .models import Product
 from django.contrib.auth.models import User
 
 
-# получение данных из бд
+# получение всех товаров из бд
 def index(request):
     users = User.objects.all()
     products = Product.objects.all()
     return render(request, "firstapp/index.html", {"users": users, "products": products})\
 
+# получение товаров конкретного пользователя
 def ofUser(request, userId):
     user = User.objects.get(id = userId)
     products = user.product_set.all()
