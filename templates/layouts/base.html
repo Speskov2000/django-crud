@@ -16,7 +16,7 @@
             </div>
             <div>
                 {% if user.is_authenticated %}
-                    <form action="/user/logout/" method="POST">{% csrf_token %} <button type="submit" class="btn btn-light">{{ user.username }} - Выйти</button><form>
+                    <a class="btn btn-light" href="/user/logout/">{{ user.username }} - Выйти</a>
                 {% else %}
                     <a class="btn btn-light" href="/user/login/">Войти</a>
                     <a class="btn btn-light" href="/user/register/">Регистрация</a>

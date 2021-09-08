@@ -7,18 +7,20 @@ from django.contrib.auth.models import User
 
 # получение данных из бд
 def index(request):
-    people = User.objects.all()
+    users = User.objects.all()
     products = Product.objects.all()
-    return render(request, "firstapp/index.html", {"people": people, "products": products})\
+    return render(request, "firstapp/index.html", {"users": users, "products": products})\
 
-# def productsOfUser(request, userId):
-#     person = Person.objects.get(id = userId)
-#     products = person.product_set.all()
-#     # products = Person.objects.get(id = userId).product_set.all()
-#     return render(request, "firstapp/productsOfUser.html", {"products": products, "person": person})
+def ofUser(request, userId):
+    user = User.objects.get(id = userId)
+    products = user.product_set.all()
+    # products = Person.objects.get(id = userId).product_set.all()
+    return render(request, "firstapp/ofUser.html", {"products": products, "user": user})
 
 # Вывешивание товара на продажу
 def create(request):
+    if not request.user.is_authenticated:
+        return HttpResponse("<h2>Необходимо войти в аккаунт для вывешивания товара</h2>")
     if request.method == "POST":
         productForm = ProductForm(request.POST)
         if productForm.is_valid():
@@ -34,35 +36,55 @@ def create(request):
     else:
         return render(request, "firstapp/create.html", {"form": ProductForm()})
 
-# def updateProduct(request, id):
-#     try:
-#         product = Product.objects.get(id=id)
-
-#         if request.method == "POST":
-#             productForm = ProductForm(request.POST)
-#             if productForm.is_valid():
-#                 product.name = productForm.cleaned_data["name"]
-#                 product.description = productForm.cleaned_data["description"]
-#                 product.price = productForm.cleaned_data["price"]
-#                 product.save(update_fields=["name", "description", "price"])
-#                 return HttpResponseRedirect("/")
-#             else:
-#                 return render(request, "firstapp/updateUser.html", {"form": productForm})
-#         else:
-#             productForm = ProductForm(initial={
-#                 "name": product.name,
-#                 "description": product.description,
-#                 "price": product.price
-#             })
-#             return render(request, "firstapp/updateUser.html", {"form": productForm})
-#     except Person.DoesNotExist:
-#         return HttpResponseNotFound(f"<h2>Product {id} not found</h2>")
 
 
-# # Удаление продукта
-# def deleteProduct(request, id):
-#     try:
-#         Product.objects.filter(id=id).delete()
-#         return HttpResponseRedirect("/")
-#     except Person.DoesNotExist:
-#         return HttpResponseNotFound("<h2>Product not found</h2>")
+# Изменение товара
+def update(request, id):
+    # Проверка авторизован ли юзер
+    if not request.user.is_authenticated:
+        return HttpResponse("<h2>Необходимо войти в аккаунт для изменения товара</h2>")
+    try:
+        product = Product.objects.get(id=id)
+
+        # Проверка владельца товара
+        if request.user.id != product.user_id:
+            return HttpResponse("<h2>Вы не можете изменить не свой товар</h2>")
+
+        # Обработка post запроса
+        if request.method == "POST":
+            productForm = ProductForm(request.POST)
+            # Проверка корректности введённых данных
+            if productForm.is_valid():
+                product.name = productForm.cleaned_data["name"]
+                product.description = productForm.cleaned_data["description"]
+                product.price = productForm.cleaned_data["price"]
+                # Обновить
+                product.save(update_fields=["name", "description", "price"])
+                return HttpResponseRedirect("/product/")
+            else:
+                return render(request, "firstapp/updateUser.html", {"form": productForm})
+        else:
+            productForm = ProductForm(initial={
+                "name": product.name,
+                "description": product.description,
+                "price": product.price
+            })
+            return render(request, "firstapp/updateUser.html", {"form": productForm})
+    except Person.DoesNotExist:
+        return HttpResponseNotFound(f"<h2>Продукт {id} не найден</h2>")
+
+
+# Удаление продукта
+def delete(request, id):
+    if not request.user.is_authenticated:
+        return HttpResponse("<h2>Необходимо войти в аккаунт для удаления товара</h2>")
+    try:
+        product = Product.objects.get(id=id)
+         # Проверка владельца товара
+        if request.user.id != product.user_id:
+            return HttpResponse("<h2>Вы не можете удалить не свой товар</h2>")
+
+        product.delete()
+        return HttpResponseRedirect("/product/")
+    except Person.DoesNotExist:
+        return HttpResponseNotFound(f"<h2>Продукт {id} не найден</h2>")

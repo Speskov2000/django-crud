@@ -3,7 +3,10 @@
 
 {% block content %}
 
-<a href="/product/create">Выставить товар на продажу</a>
+{% if user.is_authenticated %}
+    <a href="/product/create">Выставить товар на продажу</a>
+{% endif %}
+
 <hr>
 <h2>Список Товаров:</h2>
 {% if products.count > 0 %}
@@ -17,22 +20,23 @@
             <p>{{ product.description }}</p>
             <p>Цена: {{ product.price }} Тг.</p>
 
-
-            <p><a href="/product/update/{{ product.id }}">Изменить</a> | <a href="/product/delete/{{ product.id }}">Удалить</a></p>
+            {% if user.is_authenticated and user.id == product.user_id %}
+                <p><a href="/product/update/{{ product.id }}/">Изменить</a> | <a href="/product/delete/{{ product.id }}">Удалить</a></p>
+            {% endif %}
         </div>
         {% endfor %}
     </div>
 {% endif %}
 <hr />
 <h2>Список пользователей:</h2>
-{% if people.count > 0 %}
+{% if users.count > 0 %}
     <table class="table">
         <tr><th>Id</th><th>Имя</th><th>Доска обьявлений пользователя</th></tr>
-        {% for person in people %}
+        {% for user in users %}
         <tr>
-            <td>{{ person.id }}</td>
-            <td>{{ person.username }}</td>
-            <td><a href="/product/productsOfUser/{{ person.id }}">Обьявления</a></td>
+            <td>{{ user.id }}</td>
+            <td>{{ user.username }}</td>
+            <td><a href="/product/ofUser/{{ user.id }}">Обьявления</a></td>
         </tr>
         {% endfor %}
     </table>

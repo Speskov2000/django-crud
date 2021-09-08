@@ -3,7 +3,7 @@
 
 {% block content %}
 
-<h2>Список товаров пользователя "{{person.name}}":</h2>
+<h2>Список товаров пользователя "{{user.username}}":</h2>
 {% if products.count > 0 %}
 <hr />
     <div class="row">
@@ -16,7 +16,7 @@
             <p>Цена: {{ product.price }} Тг.</p>
 
 
-            <p><a href="updateProduct/{{ product.id }}">Изменить</a> | <a href="deleteProduct/{{ product.id }}">Удалить</a></p>
+            <p><a href="/product/update/{{ product.id }}">Изменить</a> | <a href="/product/delete/{{ product.id }}">Удалить</a></p>
         </div>
         {% endfor %}
     </div>

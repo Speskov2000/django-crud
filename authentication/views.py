@@ -41,8 +41,6 @@ def sign_in(request):
 
 
 def sign_out(request):
-    if request.method == "POST":
-        logout(request)
-        # Redirect to a success page.
-        return HttpResponseRedirect("/")
-    return HttpResponse("Глупости отправили")
+    logout(request)
+    # Redirect to a success page.
+    return HttpResponseRedirect("/")
