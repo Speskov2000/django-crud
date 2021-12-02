@@ -11,8 +11,12 @@
 	<div class="container-fluid">
 		<div class="navbar bg-dark navbar-dark" style="margin-bottom:20px;">
 			<div>
-                <a class="navbar-brand" href="/"><h2>Django-project</h2></a>
-                <a class="btn btn-info" href="/product/"><h2>Товары</h2></a>
+                <a class="navbar-brand" href="/">Django-project</a>
+                <a class="btn btn-info" href="/product/">Товары</a>
+                <a class="btn btn-info" href="/jwt/">JWT-get user-info</a>
+                <a class="btn btn-info" href="/jwt/about">JWT-get about<a>
+                <a class="btn btn-info" href="/jwt/getToken">Получить новый токен</a>
+                <a class="btn btn-info" href="/jwt/register">Создать нового пользователя на сервисе "Auth"</a>
             </div>
             <div>
                 {% if user.is_authenticated %}

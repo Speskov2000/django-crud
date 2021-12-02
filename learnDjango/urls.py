@@ -24,6 +24,7 @@ urlpatterns = [
 
     path('user/', include('authentication.urls', namespace='authentication')),
     path('product/', include('firstapp.urls', namespace='firstapp')),
+    path('jwt/', include('jwtAuth.urls', namespace='jwtAuth')),
 
 
     path('admin/', admin.site.urls),
