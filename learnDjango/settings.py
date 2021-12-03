@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+from datetime import timedelta
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -21,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-9nitv91u6jq(ep!c9q0#9z^08cc$7bwlgbs6h0&6=rd(h#vn#k'
+SECRET_KEY = 'django-insecure-qr&-w9qo2u-^7#e+or0q($k2x*q(+f4*k288m^!jul&tl@!hfz'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -30,6 +31,12 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
+SIMPLE_JWT = {
+    'ALGORITHM': 'HS512',
+    'SIGNING_KEY': SECRET_KEY,
+    'AUTH_HEADER_TYPES': ('JWT',),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=1),
+    }
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -39,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'firstapp',
+    'rest_framework_simplejwt',
     'authentication',
 ]
 
@@ -50,6 +58,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    # 'jwtAuth.middleware.JwtMiddleware',
 ]
 
 ROOT_URLCONF = 'learnDjango.urls'

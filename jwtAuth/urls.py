@@ -4,7 +4,8 @@ from . import views
 app_name = 'jwtAuth'
 urlpatterns = [
     path('', views.index),
+    path('test', views.test),
     path('about', views.about),
-    path('getToken', views.getToken),
+    path('getTokens', views.getTokens),
     path('register', views.createUser),
 ]
