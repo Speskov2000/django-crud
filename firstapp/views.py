@@ -2,34 +2,34 @@ from django.http import HttpResponse
 from django.http import HttpResponseNotFound
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from django.contrib.auth.models import User
 
 from .forms import ProductForm
 from .models import Product
+from learnDjango.views import isTokenValid
 
 
 # получение всех товаров из бд
 def index(request):
-    users = User.objects.all()
     products = Product.objects.all()
     return render(
             request,
             "firstapp/index.html",
-            {"users": users, "products": products})
+            {"products": products})
 
 
-# получение товаров конкретного пользователя
-def ofUser(request, userId):
-    user = User.objects.get(id=userId)
-    products = user.product_set.all()
-    # products = Person.objects.get(id = userId).product_set.all()
-    return render(
-            request,
-            "firstapp/ofUser.html",
-            {"products": products, "user": user})
+# # получение товаров конкретного пользователя
+# def ofUser(request, userId):
+#     user = User.objects.get(id=userId)
+#     products = user.product_set.all()
+#     # products = Person.objects.get(id = userId).product_set.all()
+#     return render(
+#             request,
+#             "firstapp/ofUser.html",
+#             {"products": products, "user": user})
 
 
 # Вывешивание товара на продажу
+@isTokenValid
 def create(request):
     if not request.user.is_authenticated:
         return HttpResponse("\
@@ -52,6 +52,7 @@ def create(request):
         return render(request, "firstapp/create.html", {"form": ProductForm()})
 
 
+@isTokenValid
 # Изменение товара
 def update(request, id):
     # Проверка авторизован ли юзер
@@ -93,6 +94,7 @@ def update(request, id):
         return HttpResponseNotFound(f"<h2>Продукт {id} не найден</h2>")
 
 
+@isTokenValid
 # Удаление продукта
 def delete(request, id):
     if not request.user.is_authenticated:

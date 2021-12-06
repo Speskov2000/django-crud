@@ -14,17 +14,17 @@
                 <a class="navbar-brand" href="/">Django-project</a>
                 <a class="btn btn-info" href="/product/">Товары</a>
                 <a class="btn btn-info" href="/jwt/">JWT-get user-info</a>
-                <a class="btn btn-info" href="/jwt/about">JWT-get about<a>
-                <a class="btn btn-info" href="/jwt/getTokens">Получить новый токен</a>
-                <a class="btn btn-info" href="/jwt/register">Создать нового пользователя на сервисе "Auth"</a>
+                <a class="btn btn-info" href="/jwt/about/">JWT-get about<a>
             </div>
             <div>
                 {% if user.is_authenticated %}
-                    <a class="btn btn-light" href="/user/logout/">{{ user.username }} - Выйти</a>
+
                 {% else %}
-                    <a class="btn btn-light" href="/user/login/">Войти</a>
-                    <a class="btn btn-light" href="/user/register/">Регистрация</a>
+
                 {% endif %}
+                <a class="btn btn-light" href="/jwt/delTokens/"> - Выйти</a>
+                <a class="btn btn-light" href="/jwt/getTokens/">Войти</a>
+                <a class="btn btn-light" href="/jwt/register/">Регистрация</a>
             </div>
 		</div>
 		<div class="row">

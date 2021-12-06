@@ -21,12 +21,22 @@ def getTokens(request):
         if r.status_code == 200:
             request.session['access'] = r.json()['access']
             request.session['refresh'] = r.json()['refresh']
+            print(r.json())
             return HttpResponseRedirect("/jwt")
         else:
             return HttpResponse("Что-то пошло не так. Логин или пароль.\
                     А может интернет. А может сервис auth лег")
     else:
         return render(request, "jwtAuth/login.html")
+
+
+def delTokens(request):
+    '''Что-то в духе logout'a'''
+    if 'access' in request.session:
+        del request.session['access']
+    if 'refresh' in request.session:
+        del request.session['refresh']
+    return HttpResponseRedirect("/")
 
 
 @isTokenValid

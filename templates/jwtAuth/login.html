@@ -3,7 +3,7 @@
 
 {% block content %}
 <p>Вход в аккаунт:</p>
-<form method="POST">
+<form method="POST" novalidate>
     {% csrf_token %}
     <label>Username:</label>
     <input type="email" name="username"> <br><br>

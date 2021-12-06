@@ -13,8 +13,11 @@ def isTokenValid(func):
     @wraps(func)
     def wrapper(request):
         try:
-            # del request.session['access']
-            # del request.session['refresh']
+            # if 'access' in request.session:
+            #     del request.session['access']
+            # if 'refresh' in request.session:
+            #     del request.session['refresh']
+
             if 'access' in request.session:
                 access = request.session['access']
                 decodedToken = jwt.decode(
