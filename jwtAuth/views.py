@@ -19,9 +19,14 @@ def getTokens(request):
             }
         )
         if r.status_code == 200:
-            request.session['access'] = r.json()['access']
-            request.session['refresh'] = r.json()['refresh']
-            print(r.json())
+            request.session['jwtUser'] = {
+                    'access': r.json()['access'],
+                    'refresh': r.json()['refresh'],
+                    'auth': True,
+                    'user_id': r.json()['user_id'],
+                    'user_name': r.json()['user_name'],
+                }
+            print(request.session['jwtUser'])
             return HttpResponseRedirect("/jwt")
         else:
             return HttpResponse("Что-то пошло не так. Логин или пароль.\
@@ -32,16 +37,14 @@ def getTokens(request):
 
 def delTokens(request):
     '''Что-то в духе logout'a'''
-    if 'access' in request.session:
-        del request.session['access']
-    if 'refresh' in request.session:
-        del request.session['refresh']
+    if 'jwtUser' in request.session:
+        del request.session['jwtUser']
     return HttpResponseRedirect("/")
 
 
 @isTokenValid
 def index(request):
-    token = request.session['access']
+    token = request.session['jwtUser']['access']
     r = requests.get(
         f'{BASE_URL}auth/users/me',
         headers={
@@ -57,7 +60,7 @@ def index(request):
 
 @isTokenValid
 def about(request):
-    token = request.session['access']
+    token = request.session['jwtUser']['access']
     r = requests.get(
         f'{BASE_URL}about',
         headers={

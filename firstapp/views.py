@@ -14,32 +14,18 @@ def index(request):
     return render(
             request,
             "firstapp/index.html",
-            {"products": products})
-
-
-# # получение товаров конкретного пользователя
-# def ofUser(request, userId):
-#     user = User.objects.get(id=userId)
-#     products = user.product_set.all()
-#     # products = Person.objects.get(id = userId).product_set.all()
-#     return render(
-#             request,
-#             "firstapp/ofUser.html",
-#             {"products": products, "user": user})
+            {"auth": request.session['jwtUser']['auth'], "products": products})
 
 
 # Вывешивание товара на продажу
 @isTokenValid
 def create(request):
-    if not request.user.is_authenticated:
-        return HttpResponse("\
-                <h2>Необходимо войти в аккаунт для вывешивания товара</h2>")
-
     if request.method == "POST":
         productForm = ProductForm(request.POST)
         if productForm.is_valid():
             product = Product()
-            product.user = request.user
+            product.user_id = request.session['jwtUser']['user_id']
+            product.user_name = request.session['jwtUser']['user_name']
             product.name = productForm.cleaned_data["name"]
             product.description = productForm.cleaned_data["description"]
             product.price = productForm.cleaned_data["price"]
@@ -52,18 +38,17 @@ def create(request):
         return render(request, "firstapp/create.html", {"form": ProductForm()})
 
 
-@isTokenValid
 # Изменение товара
 def update(request, id):
     # Проверка авторизован ли юзер
-    if not request.user.is_authenticated:
+    if request.session['jwtUser']['auth']:
         return HttpResponse("<h2>Необходимо войти в\
 аккаунт для изменения товара</h2>")
     try:
         product = Product.objects.get(id=id)
 
         # Проверка владельца товара
-        if request.user.id != product.user_id:
+        if request.session['jwtUser']['user_id'] != product.user_id:
             return HttpResponse("<h2>Вы не можете изменить не свой товар</h2>")
 
         # Обработка post запроса

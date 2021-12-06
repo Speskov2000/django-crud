@@ -59,7 +59,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
-    # 'jwtAuth.middleware.JwtMiddleware',
+    'jwtAuth.middleware.JwtMiddleware',
 ]
 
 ROOT_URLCONF = 'learnDjango.urls'
