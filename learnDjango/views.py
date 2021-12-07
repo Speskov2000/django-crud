@@ -11,53 +11,53 @@ def isTokenValid(func):
     '''Декоратор для проверки валидности токена
     и рефреша его в случае необходимости'''
     @wraps(func)
-    def wrapper(request):
+    def wrapper(*args, **kwargs):
         try:
-            if 'jwtUser' not in request.session:
+            if 'jwtUser' not in args[0].session:
                 print("Вы не залогинились")
                 return HttpResponseRedirect('/jwt/getTokens')
 
-            if 'access' in request.session['jwtUser']:
-                access = request.session['jwtUser']['access']
+            if 'access' in args[0].session['jwtUser']:
+                access = args[0].session['jwtUser']['access']
                 decodedToken = jwt.decode(
                     access,
                     SIMPLE_JWT['SIGNING_KEY'],
                     algorithms=[SIMPLE_JWT['ALGORITHM']]
                 )
                 print("Получилось декодировать токен. Вот он: ", decodedToken)
-                request.session['jwtUser']['auth'] = True
-                print('все хорошо', request.session['jwtUser']['auth'])
-                return func(request)
+                args[0].session['jwtUser']['auth'] = True
+                print('все хорошо', args[0].session['jwtUser']['auth'])
+                return func(*args, **kwargs)
             else:
                 print("Access-token не задан. Пробуем обновить")
-                request.session['jwtUser']['auth'] = False
-                return __refreshToken(request, func)
+                args[0].session['jwtUser']['auth'] = False
+                return __refreshToken(*args, func=func)
         except jwt.ExpiredSignatureError:
             print("Токен протух. Пробуем обновить")
-            request.session['jwtUser']['auth'] = False
-            return __refreshToken(request, func)
+            args[0].session['jwtUser']['auth'] = False
+            return __refreshToken(*args, func=func)
     return wrapper
 
 
-def __refreshToken(request, func):
+def __refreshToken(*args, **kwargs):
     '''Обновление access с помощью refresh'''
 
-    if 'refresh' in request.session['jwtUser']:
-        refresh = request.session['jwtUser']['refresh']
+    if 'refresh' in args[0].session['jwtUser']:
+        refresh = args[0].session['jwtUser']['refresh']
         r = requests.post(
             f'{BASE_URL}auth/jwt/refresh',
             data={'refresh': refresh}
         )
         if r.status_code == 200:
-            request.session['jwtUser']['access'] = r.json()['access']
+            args[0].session['jwtUser']['access'] = r.json()['access']
             print(f"Вы успешно обновили access-token:\
-                    {request.session['jwtUser']['access']}")
-            request.session['jwtUser']['auth'] = True
-            return func(request)
+                    {args[0].session['jwtUser']['access']}")
+            args[0].session['jwtUser']['auth'] = True
+            return kwargs['func'](*args)
         else:
             print("Не получилось обновить токен - залогиньтесь")
-            request.session['jwtUser']['auth'] = False
+            args[0].session['jwtUser']['auth'] = False
             return HttpResponseRedirect('/jwt/getTokens')
     print("У вас не заданы токены - залогиньтесь")
-    request.session['jwtUser']['auth'] = False
+    args[0].session['jwtUser']['auth'] = False
     return HttpResponseRedirect('/jwt/getTokens')

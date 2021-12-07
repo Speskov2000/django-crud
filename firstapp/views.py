@@ -39,6 +39,7 @@ def create(request):
 
 
 # Изменение товара
+@isTokenValid
 def update(request, id):
     # Проверка авторизован ли юзер
     if request.session['jwtUser']['auth']:
