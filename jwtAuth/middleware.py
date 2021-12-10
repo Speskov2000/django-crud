@@ -7,7 +7,7 @@ class JwtMiddleware:
 
     def __call__(self, request):
         if 'jwtUser' not in request.session:
-            request.session['jwtUser'] = {'auth': False}
+            request.session['jwtUser'] = {'auth': False, 'user_id': 0}
         response = self._get_response(request)
         return response
 

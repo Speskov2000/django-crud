@@ -11,10 +11,11 @@ from learnDjango.views import isTokenValid
 # получение всех товаров из бд
 def index(request):
     products = Product.objects.all()
-    return render(
-            request,
-            "firstapp/index.html",
-            {"auth": request.session['jwtUser']['auth'], "products": products})
+    return render(request, "firstapp/index.html", {
+        'products': products,
+        'is_auth': request.session['jwtUser']['auth'],
+        'user_id': request.session['jwtUser']['user_id'],
+        })
 
 
 # Вывешивание товара на продажу
@@ -32,19 +33,21 @@ def create(request):
             product.save()
             return HttpResponseRedirect("/product/")
         else:
-            return render(
-                    request, "firstapp/create.html", {"form": productForm})
+            return render(request, "firstapp/create.html", {
+                'form': ProductForm(),
+                'is_auth': request.session['jwtUser']['auth']
+                })
     else:
-        return render(request, "firstapp/create.html", {"form": ProductForm()})
+        return render(request, "firstapp/create.html", {
+            'form': ProductForm(),
+            'is_auth': request.session['jwtUser']['auth']
+            })
 
 
 # Изменение товара
 @isTokenValid
 def update(request, id):
     # Проверка авторизован ли юзер
-    if request.session['jwtUser']['auth']:
-        return HttpResponse("<h2>Необходимо войти в\
-аккаунт для изменения товара</h2>")
     try:
         product = Product.objects.get(id=id)
 
@@ -64,18 +67,21 @@ def update(request, id):
                 product.save(update_fields=["name", "description", "price"])
                 return HttpResponseRedirect("/product/")
             else:
-                return render(
-                        request,
-                        "firstapp/updateUser.html",
-                        {"form": productForm})
+                return render(request, "firstapp/updateProduct.html", {
+                    'form': productForm,
+                    'is_auth': request.session['jwtUser']['auth']
+                    })
+
         else:
             productForm = ProductForm(initial={
                 "name": product.name,
                 "description": product.description,
                 "price": product.price
             })
-            return render(
-                    request, "firstapp/updateUser.html", {"form": productForm})
+            return render(request, "firstapp/updateProduct.html", {
+                'form': productForm,
+                'is_auth': request.session['jwtUser']['auth']
+                })
     except Product.DoesNotExist:
         return HttpResponseNotFound(f"<h2>Продукт {id} не найден</h2>")
 
@@ -83,14 +89,11 @@ def update(request, id):
 @isTokenValid
 # Удаление продукта
 def delete(request, id):
-    if not request.user.is_authenticated:
-        return HttpResponse("<h2>Необходимо войти в\
-                аккаунт для удаления товара</h2>")
     try:
         product = Product.objects.get(id=id)
         # Проверка владельца товара
-        if request.user.id != product.user_id:
-            return HttpResponse("<h2>Вы не можете удалить не свой товар</h2>")
+        if request.session['jwtUser']['user_id'] != product.user_id:
+            return HttpResponse("<h2>Вы не можете изменить не свой товар</h2>")
 
         product.delete()
         return HttpResponseRedirect("/product/")

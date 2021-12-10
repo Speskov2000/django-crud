@@ -32,7 +32,9 @@ def getTokens(request):
             return HttpResponse("Что-то пошло не так. Логин или пароль.\
                     А может интернет. А может сервис auth лег")
     else:
-        return render(request, "jwtAuth/login.html")
+        return render(request, "jwtAuth/login.html", {
+            'is_auth': request.session['jwtUser']['auth'],
+            })
 
 
 def delTokens(request):
@@ -54,7 +56,10 @@ def index(request):
     userInfo = ""
     if r.status_code == 200:
         userInfo = r.text
-        return render(request, "jwtAuth/index.html", {'json_info': userInfo})
+        return render(request, "jwtAuth/index.html", {
+            'json_info': userInfo,
+            'is_auth': request.session['jwtUser']['auth'],
+            })
     return HttpResponse('токен каким-то образом не отработал')
 
 
@@ -69,7 +74,10 @@ def about(request):
     )
     if r.status_code == 200:
         aboutText = r.text
-        return render(request, "jwtAuth/index.html", {'json_info': aboutText})
+        return render(request, "jwtAuth/index.html", {
+            'json_info': aboutText,
+            'is_auth': request.session['jwtUser']['auth'],
+            })
     else:
         return HttpResponse('токен каким-то образом не отработал')
 
